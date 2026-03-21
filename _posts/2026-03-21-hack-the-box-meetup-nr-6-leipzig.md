@@ -5,7 +5,7 @@ date: 2026-03-21
 ---
 
 On the 20th of March 2026 Philip Dost and Phillip Graf organized their first in-person Hack the Box meetup in Leipzig.
-A coworking space was rented for the venue, which had everything we needed to do some machines for a few hours. A total of 9 people participated with a diverse skill profile (mostly pentesters). I learned a lot this evening while mostly working on one machine collectively with others. The following will describe the walkthrough of the machine Markup. 
+A coworking space was rented for the venue, which had everything we needed to do some machines for a few hours. A total of 9 people participated with a diverse skill profile (mostly pentesters). I learned a lot this evening while mostly working on one machine collectively with others. The following will describe the walk through of the machine Markup. 
 ![Pasted image 20260321085017.png](/assets/images/Pasted image 20260321085017.png)
 
 A huge thank you to Philip and Phillip that organized this and took it from an online meetup to a proper event that creates a lasting memory :)
@@ -61,10 +61,10 @@ There is a order page, which takes XML as the data structure for the order POST 
 To verify that it works and we can get variable output in the first place, we can define an entity and place it in the XML document.
 If we place the variable in the quantity field, we do not get any obvious errors in the request, but also no output:
 ![Pasted image 20260321083930.png](/assets/images/Pasted image 20260321083930.png)
-Given that "Home Appliances" is echoed to the output, that field should the tested instead.
-Indeed we get output here:
+Given that "Home Appliances" is echoed to the output, that field should be tested instead.
+Output is indeed generated in that field:
 ![Pasted image 20260321083918.png](/assets/images/Pasted image 20260321083918.png)
-So now we can try to read files from the host with the SYSTEM "file:path" command. This should be attempted with files that exist guaranteed and are readable by even the least privileged users. In this case, the `C:\Windows\win.ini` file is used:
+So now we can try to read files from the host with the SYSTEM "file:path" command. This should be attempted with files that are very likely to exist and are readable by even the least privileged users. In this case, the `C:\Windows\win.ini` file is used:
 ![Pasted image 20260321083905.png](/assets/images/Pasted image 20260321083905.png)
 We do indeed retrieve its outputs.
 
@@ -72,17 +72,17 @@ In one of the web application paths, we find a comment indicating a potential us
 ![Pasted image 20260321083853.png](/assets/images/Pasted image 20260321083853.png)
 
 From our initial port scan, we know that SSH is exposed.
-If we take the potential User account and attempt to retrieve SSH keys, we get the following:
+If we take the potential user account and attempt to retrieve its SSH keys, we get the following output:
 ![Pasted image 20260321083840.png](/assets/images/Pasted image 20260321083840.png)
 
-With this we can log into the machine via SSH as Daniel and retrieve the SSH keys:
+With this we can log into the machine via SSH as Daniel and retrieve the user flag:
 ```
 chmod 600 daniel.key
 ssh daniel@10.129.95.192 -i daniel.key
 ```
 ![Pasted image 20260321083828.png](/assets/images/Pasted image 20260321083828.png)
 # Privilege Escalation
-From here we can upload an automatic enumeration tool like [[winPEAS]] very comfortably via [[scp]]:
+From here we can upload an automatic enumeration tool like winPEAS easily via scp:
 ```
 scp -i daniel.key /opt/resources/windows/winPEAS/winPEASany.exe daniel@10.129.95.192:
 ```
